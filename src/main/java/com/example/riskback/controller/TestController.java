@@ -42,6 +42,7 @@ public class TestController {
         y = y.add(y3);
         BigDecimal x = new BigDecimal(Math.pow(Math.E,y.doubleValue()));
         x = x.divide(x.add(new BigDecimal(1)), RoundingMode.HALF_UP);
+
         return InterfaceUtil.success(x);
     }
 }
