@@ -3,6 +3,7 @@ package com.example.riskback.controller;
 import com.example.riskback.annotation.LogAnnotation;
 import com.example.riskback.utils.InterfaceUtil;
 import com.example.riskback.vo.Form;
+import com.example.riskback.vo.Pre;
 import com.example.riskback.vo.ResultVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +43,11 @@ public class TestController {
         y = y.add(bTumorDiff);
         y = y.add(y3);
         BigDecimal x = new BigDecimal(Math.pow(Math.E,y.doubleValue()));
-        x = x.divide(x.add(new BigDecimal(1)), RoundingMode.HALF_UP);
-
-        return InterfaceUtil.success(x);
+        x = x.divide(x.add(new BigDecimal(1)), RoundingMode.HALF_UP).setScale(5,RoundingMode.HALF_UP);
+        NumberFormat percent = NumberFormat.getPercentInstance();
+        percent.setMaximumFractionDigits(3);
+        String predicted = percent.format(x.doubleValue());
+        String risk = x.doubleValue() > 0.322 ? "High risk" : "Low risk";
+        return InterfaceUtil.success(new Pre(predicted,risk));
     }
 }
