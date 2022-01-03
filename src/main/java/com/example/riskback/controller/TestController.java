@@ -7,6 +7,9 @@ import com.example.riskback.vo.Pre;
 import com.example.riskback.vo.ResultVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +22,12 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @Api("测试方法")
+@Log4j2
 @RequestMapping("/test")
 public class TestController {
+    private Logger logger = LoggerFactory.getLogger(DccController.class);
+
+
     @ApiOperation(value = "get方法请求")
     @GetMapping("/getList")
     public ResultVo getList(String param){
@@ -30,6 +37,7 @@ public class TestController {
     @ApiOperation(value = "post方法请求")
     @PostMapping("/postList")
     public ResultVo<List<String>> postList(@RequestBody Form form){
+        logger.info("成功获取到对象：" + form.toString());
         BigDecimal bFar = new BigDecimal(form.getFar());
         BigDecimal bCA199 = new BigDecimal(form.getCA199());
         BigDecimal bStaging = new BigDecimal(form.getStaging());
@@ -48,6 +56,7 @@ public class TestController {
         percent.setMaximumFractionDigits(3);
         String predicted = percent.format(x.doubleValue());
         String risk = x.doubleValue() > 0.322 ? "High risk" : "Low risk";
+        logger.info("返回对象: " + predicted + "," + risk);
         return InterfaceUtil.success(new Pre(predicted,risk));
     }
 }
